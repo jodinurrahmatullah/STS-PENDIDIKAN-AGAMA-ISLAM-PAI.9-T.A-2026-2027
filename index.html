@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>STS PAI Kelas 9 - SMPN 38 Bandar Lampung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            /* Mencegah seleksi teks (anti-copy) */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            overscroll-behavior-y: none; /* Mencegah pull-to-refresh di HP */
+        }
+        
+        .hide { display: none !important; }
+        
+        /* Custom scrollbar untuk daftar soal */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Animasi modal */
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-content {
+            animation: popIn 0.3s ease-out forwards;
+        }
+
+        /* Anti Screenshot & Print Proteksi */
+        @media print {
+            body { display: none !important; }
+        }
+        .protected-blur {
+            filter: blur(30px) brightness(0.2) !important;
+            transition: none !important;
+        }
+    </style>
+</head>
+<body class="text-slate-800 h-screen w-screen overflow-hidden flex flex-col" oncontextmenu="return false;">
+
+    <!-- MODAL GLOBAL -->
+    <div id="modalOverlay" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hide backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full modal-content flex flex-col items-center text-center">
+            <div id="modalIcon" class="mb-4"></div>
+            <h3 id="modalTitle" class="text-xl font-bold mb-2 text-slate-800"></h3>
+            <p id="modalMessage" class="text-sm text-slate-600 mb-6"></p>
+            <div id="modalActions" class="w-full flex gap-3"></div>
+        </div>
+    </div>
+
+    <!-- SCREEN 1: LOGIN -->
+    <div id="loginScreen" class="flex-1 flex items-center justify-center p-4 h-full">
+        <div class="bg-white rounded-2xl shadow-lg p-6 max-w-md w-full border border-slate-100">
+            <div class="text-center mb-6">
+                <div class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                </div>
+                <h1 class="text-xl font-bold text-slate-800">SUMATIF TENGAH SEMESTER (STS)</h1>
+                <p class="text-sm text-slate-500 mt-1">PAI Kelas 9 • SMPN 38 Bandar Lampung<br>Tahun Pelajaran 2026-2027</p>
+            </div>
+            
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
+                    <input type="text" id="studentName" class="w-full border border-slate-300 rounded-lg p-3 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 uppercase" placeholder="Masukkan nama..." autocomplete="off">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Kelas</label>
+                    <select id="studentClass" class="w-full border border-slate-300 rounded-lg p-3 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500">
+                        <option value="">-- Pilih Kelas --</option>
+                        <option value="9A">Kelas 9 A</option>
+                        <option value="9B">Kelas 9 B</option>
+                        <option value="9C">Kelas 9 C</option>
+                        <option value="9D">Kelas 9 D</option>
+                    </select>
+                </div>
+                
+                <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 mt-2">
+                    <p class="text-xs text-amber-800 flex gap-2">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        Sistem mencatat aktivitas. Dilarang keluar aplikasi atau pindah tab. Peringatan maksimal 3x.
+                    </p>
+                </div>
+
+                <button onclick="startExam()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 mt-2">
+                    Mulai Ujian
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: EXAM -->
+    <div id="examScreen" class="hide h-full flex flex-col bg-white">
+        <!-- Header -->
+        <header class="bg-emerald-600 text-white p-3 md:p-4 flex justify-between items-center shadow-md z-10 shrink-0">
+            <div>
+                <h2 class="font-bold text-sm md:text-base leading-tight truncate w-40 md:w-auto" id="hdrName">-</h2>
+                <p class="text-xs text-emerald-100" id="hdrClass">-</p>
+            </div>
+            <div class="flex items-center gap-2 bg-emerald-700/50 px-3 py-1.5 rounded-full">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span id="timerDisplay" class="font-mono font-bold tracking-wider">90:00</span>
+            </div>
+        </header>
+
+        <!-- Main Content (Scrollable) -->
+        <main class="flex-1 overflow-y-auto custom-scrollbar relative bg-slate-50">
+            <div class="max-w-3xl mx-auto p-4 md:p-6 w-full">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 mb-20">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                        <span class="text-sm font-semibold text-slate-500" id="qNumber">Soal 1 / 50</span>
+                        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">2 Poin</span>
+                    </div>
+                    
+                    <p id="qText" class="text-base md:text-lg text-slate-800 leading-relaxed mb-6 font-medium whitespace-pre-line"></p>
+                    
+                    <div id="qOptions" class="space-y-3">
+                        <!-- Options injected here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer Navigation -->
+        <footer class="bg-white border-t border-slate-200 p-3 md:p-4 flex justify-between items-center shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <button onclick="prevQuestion()" id="btnPrev" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 font-medium disabled:opacity-50 flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> <span class="hidden md:inline">Sebelumnya</span>
+            </button>
+            
+            <button onclick="toggleQList()" class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 font-semibold flex items-center gap-2 hover:bg-slate-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                Daftar Soal
+            </button>
+            
+            <button onclick="nextQuestion()" id="btnNext" class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-medium flex items-center gap-1">
+                <span class="hidden md:inline">Selanjutnya</span> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+            
+            <button onclick="confirmSubmit()" id="btnFinish" class="hide px-4 py-2 rounded-lg bg-red-600 text-white font-medium">
+                Selesai Ujian
+            </button>
+        </footer>
+
+        <!-- Overlay Daftar Soal -->
+        <div id="qListOverlay" class="absolute inset-0 bg-white/95 backdrop-blur z-20 flex flex-col hide transition-all">
+            <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-white shadow-sm">
+                <h3 class="font-bold text-slate-800">Daftar Navigasi Soal</h3>
+                <button onclick="toggleQList()" class="p-2 bg-slate-100 rounded-full text-slate-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                <div class="flex items-center gap-4 mb-4 text-xs justify-center">
+                    <div class="flex items-center gap-1"><div class="w-3 h-3 bg-emerald-500 rounded"></div> Dijawab</div>
+                    <div class="flex items-center gap-1"><div class="w-3 h-3 border border-slate-300 rounded"></div> Belum</div>
+                    <div class="flex items-center gap-1"><div class="w-3 h-3 border-2 border-blue-500 rounded"></div> Saat ini</div>
+                </div>
+                <div id="qGrid" class="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2 max-w-3xl mx-auto">
+                    <!-- Grid items injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="resultScreen" class="hide h-full flex flex-col bg-slate-50 overflow-y-auto custom-scrollbar">
+        <div class="max-w-3xl mx-auto w-full p-4 md:p-6">
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-slate-100 mb-6">
+                <div class="bg-emerald-600 p-6 text-center text-white relative">
+                    <h2 class="text-2xl font-bold mb-1">Ujian Selesai!</h2>
+                    <p class="text-emerald-100 text-sm">Berikut adalah hasil Sumatif Tengah Semester Anda.</p>
+                </div>
+                <div class="p-6">
+                    <div class="flex flex-col md:flex-row justify-around items-center gap-6 mb-8">
+                        <div class="text-center">
+                            <p class="text-sm text-slate-500 font-medium">NILAI AKHIR</p>
+                            <p class="text-6xl font-bold text-slate-800" id="resScore">0</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center min-w-[100px]">
+                                <p class="text-xs text-emerald-600 font-semibold mb-1">BENAR</p>
+                                <p class="text-2xl font-bold text-emerald-700" id="resCorrect">0</p>
+                            </div>
+                            <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-center min-w-[100px]">
+                                <p class="text-xs text-red-600 font-semibold mb-1">SALAH</p>
+                                <p class="text-2xl font-bold text-red-700" id="resWrong">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="violationAlert" class="hide bg-amber-50 border border-amber-200 p-4 rounded-xl mb-6">
+                        <h4 class="font-bold text-amber-800 flex items-center gap-2 mb-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            Catatan Pelanggaran
+                        </h4>
+                        <ul id="violationList" class="text-sm text-amber-700 list-disc list-inside space-y-1"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pembahasan -->
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
+                <h3 class="font-bold text-lg text-slate-800 mb-4 border-b border-slate-100 pb-2">Review Jawaban</h3>
+                <div id="reviewContainer" class="space-y-6">
+                    <!-- Review injected here -->
+                </div>
+            </div>
+            
+            <!-- Tombol Kembali ke Login setelah Selesai Ujian -->
+            <div class="mt-8 text-center">
+                <button onclick="resetToLogin()" class="w-full sm:w-auto px-8 py-3 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 mx-auto">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+                    Selesai & Kembali ke Halaman Login
+                </button>
+            </div>
+
+            <div class="text-center mt-6 mb-12">
+                <p class="text-xs text-slate-400">© 2026 SMPN 38 Bandar Lampung</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === KONFIGURASI GOOGLE SHEETS ===
+        // GANTI URL DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9cZuxYRhWK7wx9W62n26HlwTAPV3KPWZlnp3NNPbHY7CDVXkIGrub-Jm-JDlB_M2x/exec';
+        
+        // === DATA SOAL ===
+        // Menggunakan backticks (`) agar kebal dari error pemotongan baris/karakter aneh
+        const questionsData = [
+            { id: 1, text: `Perhatikan ilustrasi berikut!\nRani selalu berhati-hati ketika berbicara dan berbuat. Ia tidak mau menyakiti orang lain meskipun tidak ada guru yang melihatnya. Menurut Rani, setiap perbuatan manusia akan dipertanggungjawabkan di hadapan Allah Swt.\nSikap Rani menunjukkan perilaku yang mencerminkan iman kepada ....`, options: [`A. malaikat`, `B. hari akhir`, `C. kitab Allah`, `D. rasul Allah`], answer: 1, reason: `Perilaku mempertanggungjawabkan perbuatan di hadapan Allah mencerminkan iman kepada hari akhir.` },
+            { id: 2, text: `Salah satu hikmah beriman kepada hari akhir adalah ....`, options: [`A. membuat manusia takut melakukan semua aktivitas`, `B. mendorong manusia berhati-hati dan bertanggung jawab dalam berbuat`, `C. membuat seseorang meninggalkan kehidupan dunia`, `D. menjadikan seseorang tidak perlu bekerja keras`], answer: 1, reason: `Iman kepada hari akhir mendorong manusia berhati-hati dan bertanggung jawab.` },
+            { id: 3, text: `Perhatikan beberapa perilaku berikut!\n1) Rajin beribadah\n2) Menolong orang yang membutuhkan\n3) Menyontek saat ujian\n4) Mengembalikan barang yang ditemukan\n5) Berbohong untuk mendapatkan keuntungan\nPerilaku yang sesuai dengan keimanan kepada hari akhir ditunjukkan oleh nomor ....`, options: [`A. 1, 2, dan 4`, `B. 1, 2, dan 3`, `C. 2, 3, dan 5`, `D. 3, 4, dan 5`], answer: 0, reason: `Perilaku baik sesuai iman adalah rajin ibadah (1), menolong (2), dan jujur/mengembalikan barang (4).` },
+            { id: 4, text: `Dimas menemukan dompet di halaman sekolah. Di dalamnya terdapat uang dan kartu identitas pemilik. Jika Dimas benar-benar memahami adanya hari pembalasan, tindakan yang paling tepat adalah ....`, options: [`A. mengambil uangnya dan membuang dompet`, `B. menyimpan dompet karena tidak ada yang melihat`, `C. menyerahkan dompet kepada guru untuk dikembalikan kepada pemiliknya`, `D. memberikan dompet kepada teman agar tidak diketahui`], answer: 2, reason: `Kejujuran adalah implementasi iman kepada hari pembalasan.` },
+            { id: 5, text: `Hari kiamat yang ditandai dengan kehancuran seluruh alam semesta disebut ....`, options: [`A. kiamat sugra`, `B. kiamat kubra`, `C. yaumul mizan`, `D. yaumul jaza'`], answer: 1, reason: `Kiamat kubra adalah kehancuran seluruh alam semesta.` },
+            { id: 6, text: `Contoh kiamat sugra adalah ....`, options: [`A. hancurnya seluruh alam semesta`, `B. berakhirnya kehidupan seluruh manusia secara serentak`, `C. kematian seseorang`, `D. hancurnya bumi dan seluruh planet`], answer: 2, reason: `Kiamat sugra adalah kiamat kecil, contohnya kematian.` },
+            { id: 7, text: `Setelah manusia dibangkitkan dari alam kubur, mereka akan dikumpulkan di suatu tempat. Peristiwa tersebut disebut ....`, options: [`A. Yaumul Ba'ats`, `B. Yaumul Mahsyar`, `C. Yaumul Hisab`, `D. Yaumul Jaza'`], answer: 1, reason: `Tempat berkumpulnya manusia setelah dibangkitkan adalah Padang Mahsyar (Yaumul Mahsyar).` },
+            { id: 8, text: `Perhatikan pernyataan berikut!\n“Setiap manusia akan diperiksa dan dihitung amal perbuatannya selama hidup di dunia.”\nPernyataan tersebut berkaitan dengan ....`, options: [`A. Yaumul Ba'ats`, `B. Yaumul Mahsyar`, `C. Yaumul Hisab`, `D. Yaumul Barzakh`], answer: 2, reason: `Yaumul Hisab adalah hari perhitungan amal.` },
+            { id: 9, text: `Pada hari kiamat, amal manusia akan ditimbang untuk mengetahui berat atau ringannya amal tersebut. Peristiwa ini disebut ....`, options: [`A. Yaumul Mizan`, `B. Yaumul Ba'ats`, `C. Yaumul Mahsyar`, `D. Yaumul Jaza'`], answer: 0, reason: `Yaumul Mizan adalah hari penimbangan amal.` },
+            { id: 10, text: `Seseorang rajin berbuat baik karena berharap mendapatkan balasan dari Allah Swt. dan takut melakukan dosa karena yakin akan mendapatkan balasan atas perbuatannya.\nSikap tersebut menunjukkan fungsi iman kepada hari akhir sebagai ....`, options: [`A. penghapus kewajiban`, `B. pengendali perilaku manusia`, `C. alasan meninggalkan pekerjaan`, `D. alasan menghindari kehidupan sosial`], answer: 1, reason: `Fungsi iman hari akhir adalah mengendalikan perilaku agar selalu di jalan kebenaran.` },
+            { id: 11, text: `Perhatikan kasus berikut!\nAndi mendapatkan nilai tinggi karena menyontek. Ia merasa senang karena guru tidak mengetahui perbuatannya.\nJika dikaitkan dengan iman kepada hari akhir, kesalahan berpikir Andi adalah ....`, options: [`A. menganggap nilai lebih penting daripada proses`, `B. menganggap guru tidak mampu mengawasi`, `C. mengira perbuatannya tidak akan dipertanggungjawabkan`, `D. menganggap belajar tidak menyenangkan`], answer: 2, reason: `Meski guru tidak tahu, Allah Maha Mengetahui dan amal akan dipertanggungjawabkan.` },
+            { id: 12, text: `Salah satu tanda orang yang meyakini adanya kehidupan setelah kematian adalah ....`, options: [`A. berbuat sesuka hati`, `B. mengutamakan kesenangan dunia semata`, `C. mempersiapkan kehidupan akhirat dengan amal saleh`, `D. menghindari semua kegiatan duniawi`], answer: 2, reason: `Orang beriman selalu menyiapkan bekal amal saleh untuk akhirat.` },
+            { id: 13, text: `Perhatikan situasi berikut!\nSeorang siswa diberi kesempatan untuk menjadi ketua kelompok. Ia menggunakan kesempatan tersebut untuk membantu semua anggota dan tidak menyalahgunakan kepercayaan.\nPerilaku tersebut paling sesuai dengan ....`, options: [`A. kesadaran bahwa setiap amanah akan dipertanggungjawabkan`, `B. keinginan mendapatkan pujian`, `C. ketakutan terhadap teman`, `D. keinginan memperoleh hadiah`], answer: 0, reason: `Tanggung jawab atas amanah adalah cerminan iman akan pertanggungjawaban akhirat.` },
+            { id: 14, text: `Mengimani hari akhir tidak berarti seseorang harus meninggalkan kehidupan dunia. Sikap yang tepat adalah ....`, options: [`A. bekerja keras untuk dunia dan melupakan akhirat`, `B. hanya beribadah tanpa belajar`, `C. menyeimbangkan usaha dunia dengan persiapan akhirat`, `D. mengejar kekayaan sebanyak-banyaknya`], answer: 2, reason: `Islam mengajarkan keseimbangan (tawasuth) antara dunia dan akhirat.` },
+            { id: 15, text: `Mengapa iman kepada hari akhir dapat membuat seseorang lebih bertanggung jawab?`, options: [`A. Karena manusia mengetahui semua orang akan selalu melihatnya`, `B. Karena manusia yakin semua amal akan mendapatkan balasan`, `C. Karena manusia ingin selalu dipuji`, `D. Karena manusia takut kepada manusia lain`], answer: 1, reason: `Keyakinan akan balasan Allah membuat manusia berhati-hati dan bertanggung jawab.` },
+            { id: 16, text: `Perhatikan contoh berikut!\nSiti tetap berkata jujur meskipun kejujurannya menyebabkan ia kehilangan kesempatan mendapatkan hadiah.\nSikap Siti menunjukkan ....`, options: [`A. keputusasaan`, `B. keimanan dan tanggung jawab moral`, `C. ketidakmampuan bersaing`, `D. rasa takut kepada teman`], answer: 1, reason: `Kejujuran walau pahit menunjukkan integritas dan iman yang kuat.` },
+            { id: 17, text: `Orang yang mengingkari adanya hari akhir cenderung ....`, options: [`A. semakin berhati-hati dalam berbuat`, `B. menyadari semua perbuatannya akan dibalas`, `C. menganggap kehidupan dunia sebagai satu-satunya kehidupan`, `D. memperbanyak amal saleh`], answer: 2, reason: `Pengingkar hari akhir menganggap dunia adalah segalanya (materialisme).` },
+            { id: 18, text: `Dalam kehidupan sehari-hari, penerapan iman kepada hari akhir yang paling tepat adalah ....`, options: [`A. belajar hanya ketika akan ujian`, `B. membantu teman hanya jika mendapat imbalan`, `C. berbuat baik meskipun tidak ada yang melihat`, `D. berbuat baik agar terkenal`], answer: 2, reason: `Ikhlas berbuat baik karena Allah, bukan karena dilihat manusia.` },
+            { id: 19, text: `Perhatikan pernyataan berikut!\n“Allah Swt. akan memberikan balasan yang adil kepada manusia berdasarkan amal perbuatannya.”\nPernyataan tersebut menunjukkan bahwa kehidupan akhirat memiliki hubungan erat dengan ....`, options: [`A. pertanggungjawaban manusia`, `B. kekayaan manusia`, `C. kedudukan manusia`, `D. popularitas manusia`], answer: 0, reason: `Balasan di akhirat didasarkan pada pertanggungjawaban perbuatan manusia.` },
+            { id: 20, text: `Jika seorang siswa gagal dalam sebuah perlombaan, pemahaman tentang kehidupan akhirat dapat membantunya untuk ....`, options: [`A. menyalahkan semua orang`, `B. putus asa dan berhenti berusaha`, `C. menerima hasil dengan bijak dan tetap berusaha melakukan kebaikan`, `D. membalas orang yang dianggap menjadi penyebab kegagalan`], answer: 2, reason: `Iman mengajarkan kesabaran, qada dan qadar, serta tidak mudah putus asa.` },
+            { id: 21, text: `Perhatikan pernyataan berikut!\n1) Dunia merupakan tempat manusia beramal.\n2) Akhirat merupakan tempat menerima balasan.\n3) Semua manusia akan mempertanggungjawabkan amalnya.\n4) Harta menentukan kemuliaan seseorang di akhirat.\nPernyataan yang benar adalah ....`, options: [`A. 1, 2, dan 3`, `B. 1 dan 4`, `C. 2 dan 4`, `D. 1, 2, 3, dan 4`], answer: 0, reason: `Kemuliaan di akhirat ditentukan ketakwaan, bukan harta.` },
+            { id: 22, text: `Seorang siswa berkata, “Saya akan berbuat baik meskipun tidak mendapatkan penghargaan karena Allah mengetahui semua perbuatan saya.”\nPernyataan tersebut menunjukkan adanya ....`, options: [`A. sikap riya`, `B. kesadaran terhadap pertanggungjawaban amal`, `C. sikap sombong`, `D. sikap putus asa`], answer: 1, reason: `Kesadaran akan pengawasan Allah menumbuhkan ikhlas dan tanggung jawab.` },
+            { id: 23, text: `Hikmah utama memahami tahapan kehidupan setelah kematian adalah ....`, options: [`A. manusia dapat mengetahui tanggal kematiannya`, `B. manusia terdorong mempersiapkan amal terbaik`, `C. manusia tidak perlu memikirkan kehidupan dunia`, `D. manusia dapat menghindari kematian`], answer: 1, reason: `Mengetahui kehidupan akhirat memotivasi untuk beramal saleh.` },
+            { id: 24, text: `Jika kamu melihat temanmu menyontek dan ia berkata, “Tidak masalah, guru tidak tahu,” respons yang paling tepat adalah ....`, options: [`A. membiarkannya karena bukan urusan kita`, `B. ikut menyontek agar nilainya sama`, `C. mengingatkannya bahwa kejujuran tetap penting karena setiap perbuatan akan dipertanggungjawabkan`, `D. menyebarkan kesalahannya di media sosial`], answer: 2, reason: `Amar ma'ruf nahi munkar dengan cara yang baik mengingatkan akan hisab.` },
+            { id: 25, text: `Kesimpulan yang paling tepat tentang iman kepada hari akhir adalah ....`, options: [`A. membuat manusia menjauhi semua urusan dunia`, `B. membuat manusia hanya takut terhadap kematian`, `C. mendorong manusia menjalani kehidupan secara bertanggung jawab dan mempersiapkan kehidupan akhirat`, `D. membuat manusia tidak perlu bekerja karena akhirat lebih penting`], answer: 2, reason: `Iman kepada hari akhir menciptakan manusia yang seimbang dunia akhirat.` },
+            
+            // BAB 2
+            { id: 26, text: `Akhlak terpuji merupakan perilaku yang ....`, options: [`A. sesuai dengan keinginan pribadi`, `B. sesuai dengan ajaran Islam dan membawa kebaikan`, `C. membuat seseorang terkenal`, `D. selalu mendapatkan penghargaan`], answer: 1, reason: `Akhlak mahmudah didasarkan pada Al-Qur'an dan As-Sunnah.` },
+            { id: 27, text: `Perhatikan ilustrasi berikut!\nFahmi mengetahui bahwa temannya melakukan kesalahan. Ia tidak langsung menyebarkan kesalahan tersebut kepada teman-teman lain, tetapi menasihatinya secara pribadi.\nSikap Fahmi menunjukkan ....`, options: [`A. menjaga aib dan memberikan nasihat dengan baik`, `B. menyembunyikan kejahatan`, `C. tidak peduli terhadap teman`, `D. takut kepada temannya`], answer: 0, reason: `Menjaga aib saudara adalah perintah agama, disertai nasihat (mau'izhah hasanah).` },
+            { id: 28, text: `Ketika mendapatkan berita mengejutkan dari media sosial, seorang muslim sebaiknya ....`, options: [`A. langsung menyebarkannya`, `B. memperindah berita agar menarik`, `C. melakukan tabayun atau memeriksa kebenarannya`, `D. mengirimkannya kepada semua grup`], answer: 2, reason: `Tabayun mencegah fitnah dari berita yang belum jelas (hoaks).` },
+            { id: 29, text: `Perhatikan situasi berikut!\nSebuah pesan di grup kelas menyebutkan bahwa salah satu guru melakukan sesuatu yang buruk. Tidak ada sumber yang jelas.\nTindakan paling bijaksana adalah ....`, options: [`A. langsung mempercayainya`, `B. meneruskannya kepada kelas lain`, `C. memeriksa sumber dan kebenaran informasi terlebih dahulu`, `D. memberikan komentar yang memperburuk keadaan`], answer: 2, reason: `Informasi tanpa sumber yang jelas wajib diklarifikasi (tabayun).` },
+            { id: 30, text: `Tabayun berarti ....`, options: [`A. menyembunyikan informasi`, `B. mencari dan memastikan kebenaran suatu informasi`, `C. menyebarkan berita dengan cepat`, `D. menghapus semua informasi`], answer: 1, reason: `Tabayun berasal dari bahasa Arab yang bermakna mencari kejelasan.` },
+            { id: 31, text: `Mengapa Islam mengajarkan tabayun?`, options: [`A. Agar manusia menjadi lambat dalam berkomunikasi`, `B. Agar setiap berita menjadi viral`, `C. Agar manusia tidak mudah terjerumus dalam fitnah dan kesalahpahaman`, `D. Agar seseorang tidak boleh menggunakan media sosial`], answer: 2, reason: `Untuk mencegah kerugian dan permusuhan akibat informasi salah.` },
+            { id: 32, text: `Perhatikan perilaku berikut!\n1) Memeriksa sumber berita\n2) Membaca informasi secara utuh\n3) Menyebarkan berita tanpa membaca\n4) Membandingkan informasi dengan sumber terpercaya\n5) Memastikan konteks informasi\nPerilaku yang mencerminkan tabayun adalah ....`, options: [`A. 1, 2, 4, dan 5`, `B. 1 dan 3`, `C. 2 dan 3`, `D. 3, 4, dan 5`], answer: 0, reason: `Nomor 3 bukan cerminan tabayun.` },
+            { id: 33, text: `Seorang siswa menerima foto temannya yang telah diedit sehingga terlihat melakukan perbuatan buruk. Foto tersebut kemudian disertai ajakan untuk menyebarkannya.\nSikap yang tepat adalah ....`, options: [`A. ikut menyebarkan karena lucu`, `B. menyimpan dan menyebarkannya nanti`, `C. tidak menyebarkan dan memeriksa kebenarannya`, `D. membuat foto editan lain sebagai balasan`], answer: 2, reason: `Tidak ikut menyebarkan fitnah dan melakukan kroscek.` },
+            { id: 34, text: `Dalam menggunakan media sosial, seorang muslim harus menjaga ....`, options: [`A. kecepatan mendapatkan pengikut`, `B. jumlah komentar`, `C. etika, kebenaran informasi, dan kehormatan orang lain`, `D. popularitas akun`], answer: 2, reason: `Adab bermedia sosial meliputi menjaga lisan/tulisan dan kehormatan.` },
+            { id: 35, text: `Perhatikan pernyataan berikut!\n“Jari kita dapat menjadi sarana kebaikan, tetapi juga dapat menjadi sumber masalah jika digunakan tanpa berpikir.”\nMakna pernyataan tersebut adalah ....`, options: [`A. media sosial harus ditinggalkan`, `B. setiap pengguna media sosial bertanggung jawab terhadap apa yang dibagikannya`, `C. semua informasi di media sosial salah`, `D. hanya orang dewasa yang boleh menggunakan media sosial`], answer: 1, reason: `Setiap ketikan akan dimintai pertanggungjawaban (hisab).` },
+            { id: 36, text: `Jika temanmu mengirim berita yang belum jelas kebenarannya, jawaban yang paling bijak adalah ....`, options: [`A. “Sebarkan saja supaya semua tahu.”`, `B. “Saya akan cek dulu sumber dan kebenarannya.”`, `C. “Kalau banyak yang mengirim berarti pasti benar.”`, `D. “Saya akan menambahkan informasi agar lebih menarik.”`], answer: 1, reason: `Mempraktikkan sikap tabayun secara langsung.` },
+            { id: 37, text: `Salah satu dampak buruk menyebarkan berita bohong adalah ....`, options: [`A. mempererat persaudaraan`, `B. meningkatkan kepercayaan`, `C. menimbulkan fitnah, konflik, dan kerugian`, `D. membuat komunikasi lebih sehat`], answer: 2, reason: `Hoaks atau fitnah merusak tatanan sosial.` },
+            { id: 38, text: `Perhatikan kasus berikut!\nAlya mendapat informasi bahwa temannya mendapatkan beasiswa karena melakukan kecurangan. Setelah dicek, ternyata informasi tersebut tidak benar.\nPelajaran yang dapat diambil dari kasus tersebut adalah ....`, options: [`A. berita yang menarik pasti benar`, `B. informasi tentang orang lain boleh disebarkan`, `C. pentingnya melakukan tabayun sebelum mempercayai dan menyebarkan berita`, `D. semua informasi dari teman harus ditolak`], answer: 2, reason: `Kasus ini membuktikan urgensi tabayun untuk menghindari su'udzon.` },
+            { id: 39, text: `Sikap menghargai perbedaan pendapat dalam diskusi disebut ....`, options: [`A. fanatisme`, `B. toleransi`, `C. kesombongan`, `D. permusuhan`], answer: 1, reason: `Toleransi (tasamuh) adalah menghargai dan menghormati perbedaan.` },
+            { id: 40, text: `Ketika pendapat kita berbeda dengan pendapat teman, tindakan yang paling sesuai dengan akhlak Islam adalah ....`, options: [`A. memaksakan pendapat`, `B. mengejek pendapat teman`, `C. mendengarkan dan menyampaikan pendapat dengan santun`, `D. meninggalkan diskusi`], answer: 2, reason: `Islam mengajarkan adab berdiskusi dengan argumen yang baik.` },
+            { id: 41, text: `Perhatikan situasi berikut!\nDalam kerja kelompok, dua anggota memiliki pendapat berbeda tentang cara menyelesaikan tugas. Keduanya kemudian mendengarkan alasan masing-masing dan mencari solusi yang dapat diterima bersama.\nSikap tersebut menunjukkan ....`, options: [`A. toleransi dan musyawarah`, `B. persaingan tidak sehat`, `C. sikap egois`, `D. sikap menyerah`], answer: 0, reason: `Musyawarah mufakat diiringi sikap tasamuh.` },
+            { id: 42, text: `Salah satu ciri orang yang berakhlak mulia ketika menerima kritik adalah ....`, options: [`A. langsung marah`, `B. membalas kritik dengan hinaan`, `C. mendengarkan dan mengambil pelajaran yang baik`, `D. menyebarkan keburukan orang yang mengkritik`], answer: 2, reason: `Kritik dianggap sebagai masukan untuk muhasabah diri.` },
+            { id: 43, text: `Jika seseorang melakukan kesalahan kepada kita dan kemudian meminta maaf dengan tulus, sikap yang baik adalah ....`, options: [`A. terus mengungkit kesalahannya`, `B. memaafkan dan memberikan kesempatan untuk memperbaiki diri`, `C. menyebarkan kesalahannya`, `D. membalas kesalahannya`], answer: 1, reason: `Sifat pemaaf adalah ciri hamba Allah yang bertakwa.` },
+            { id: 44, text: `Perhatikan pernyataan berikut!\n“Orang yang kuat bukanlah orang yang selalu menang dalam perdebatan, tetapi orang yang mampu mengendalikan dirinya ketika marah.”\nSikap yang dimaksud adalah ....`, options: [`A. sabar dan mampu mengendalikan diri`, `B. sombong`, `C. iri hati`, `D. dendam`], answer: 0, reason: `Sesuai dengan hadis Nabi saw tentang orang yang kuat adalah yang menahan marah.` },
+            { id: 45, text: `Ketika menghadapi komentar negatif di media sosial, tindakan yang paling bijak adalah ....`, options: [`A. membalas dengan kata-kata kasar`, `B. membuat komentar yang lebih menyakitkan`, `C. tetap tenang dan memberikan respons yang santun jika diperlukan`, `D. mengajak orang lain menyerang akun tersebut`], answer: 2, reason: `Menghadapi keburukan dengan kebaikan (akhlak karimah).` },
+            { id: 46, text: `Perhatikan beberapa tindakan berikut!\n1) Berkata jujur\n2) Menepati janji\n3) Menghormati orang lain\n4) Menyebarkan rahasia teman\n5) Menghina orang yang berbeda pendapat\nPerilaku akhlak terpuji ditunjukkan oleh ....`, options: [`A. 1, 2, dan 3`, `B. 1, 4, dan 5`, `C. 2, 3, dan 4`, `D. 3, 4, dan 5`], answer: 0, reason: `Nomor 4 dan 5 adalah akhlak tercela.` },
+            { id: 47, text: `Mengapa menjaga lisan dan tulisan penting dalam kehidupan seorang muslim?`, options: [`A. Karena semua orang harus memiliki pendapat yang sama`, `B. Karena ucapan dan tulisan dapat memberikan manfaat atau menimbulkan kerugian`, `C. Karena manusia tidak boleh berkomunikasi`, `D. Karena media sosial selalu berbahaya`], answer: 1, reason: `Lisan/tulisan ibarat pisau bermata dua.` },
+            { id: 48, text: `Perhatikan kasus berikut!\nRaka melihat sebuah video yang sedang viral. Ia merasa video tersebut lucu, tetapi video itu mempermalukan seseorang. Sebelum membagikannya, Raka berpikir tentang dampak yang mungkin terjadi.\nKeputusan Raka menunjukkan ....`, options: [`A. sikap tidak peduli`, `B. berpikir kritis dan mempertimbangkan akhlak`, `C. takut menggunakan media sosial`, `D. tidak memahami teknologi`], answer: 1, reason: `Berpikir sebelum bertindak (think before post).` },
+            { id: 49, text: `Seorang siswa ingin menjadi pribadi yang dipercaya oleh teman dan guru. Kebiasaan yang paling tepat untuk dibangun adalah ....`, options: [`A. berkata sesuai keadaan, menepati janji, dan bertanggung jawab`, `B. menyembunyikan kesalahan`, `C. mengikuti semua perkataan teman`, `D. mencari pujian sebanyak-banyaknya`], answer: 0, reason: `Sifat amanah dan jujur (shiddiq) membangun kepercayaan.` },
+            { id: 50, text: `Perhatikan pernyataan berikut!\n“Gunakan ilmu sebelum berbicara, periksa informasi sebelum menyebarkan, dan pikirkan dampaknya sebelum bertindak.”\nNilai utama yang dapat diterapkan dari pernyataan tersebut adalah ....`, options: [`A. berpikir kritis, bertanggung jawab, dan berakhlak mulia`, `B. mengejar popularitas`, `C. membatasi pergaulan`, `D. menghindari semua teknologi`], answer: 0, reason: `Ringkasan adab bermuamalah dan tabayun di era digital.` }
+        ];
+
+        // === STATE VARIABLES ===
+        let appState = {
+            studentName: '',
+            studentClass: '',
+            answers: new Array(50).fill(null),
+            currentQuestion: 0,
+            timeLeft: 90 * 60, // 90 menit
+            timerInterval: null,
+            isExamActive: false,
+            cheatCount: 0,
+            violations: [],
+            isResultScreen: false
+        };
+
+        const MAX_CHEAT = 4;
+        const EXAM_DURATION = 90 * 60; 
+
+        // === DOM ELEMENTS ===
+        const el = {
+            loginScreen: document.getElementById('loginScreen'),
+            examScreen: document.getElementById('examScreen'),
+            resultScreen: document.getElementById('resultScreen'),
+            qNumber: document.getElementById('qNumber'),
+            qText: document.getElementById('qText'),
+            qOptions: document.getElementById('qOptions'),
+            btnPrev: document.getElementById('btnPrev'),
+            btnNext: document.getElementById('btnNext'),
+            btnFinish: document.getElementById('btnFinish'),
+            qGrid: document.getElementById('qGrid'),
+            qListOverlay: document.getElementById('qListOverlay'),
+            timer: document.getElementById('timerDisplay'),
+            hdrName: document.getElementById('hdrName'),
+            hdrClass: document.getElementById('hdrClass')
+        };
+
+        // === MODAL SYSTEM ===
+        const modal = {
+            show: (title, message, iconType, actionsHtml) => {
+                const overlay = document.getElementById('modalOverlay');
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('modalMessage').textContent = message;
+                document.getElementById('modalActions').innerHTML = actionsHtml;
+                
+                const iconContainer = document.getElementById('modalIcon');
+                if(iconType === 'warning') {
+                    iconContainer.innerHTML = `<div class="bg-amber-100 p-3 rounded-full text-amber-600"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>`;
+                } else if(iconType === 'error') {
+                    iconContainer.innerHTML = `<div class="bg-red-100 p-3 rounded-full text-red-600"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>`;
+                } else {
+                    iconContainer.innerHTML = `<div class="bg-blue-100 p-3 rounded-full text-blue-600"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>`;
+                }
+                overlay.classList.remove('hide');
+            },
+            hide: () => {
+                document.getElementById('modalOverlay').classList.add('hide');
+            }
+        };
+
+        // === CORE FUNCTIONS ===
+        function startExam() {
+            const name = document.getElementById('studentName').value.trim();
+            const cls = document.getElementById('studentClass').value;
+
+            if (!name || !cls) {
+                modal.show('Data Tidak Lengkap', 'Silakan isi Nama dan Kelas terlebih dahulu.', 'warning', 
+                    `<button onclick="modal.hide()" class="w-full bg-slate-800 text-white py-2 rounded-lg font-medium">Mengerti</button>`);
+                return;
+            }
+
+            appState.studentName = name;
+            appState.studentClass = cls;
+            el.hdrName.textContent = name.toUpperCase();
+            el.hdrClass.textContent = cls;
+
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(e => console.log("Fullscreen ditolak"));
+            }
+
+            el.loginScreen.classList.add('hide');
+            el.examScreen.classList.remove('hide');
+            
+            appState.isExamActive = true;
+            generateGrid();
+            renderQuestion();
+            startTimer();
+        }
+
+        function renderQuestion() {
+            const idx = appState.currentQuestion;
+            const q = questionsData[idx];
+            
+            el.qNumber.textContent = `Soal ${idx + 1} / ${questionsData.length}`;
+            el.qText.textContent = q.text;
+            
+            let optionsHtml = '';
+            q.options.forEach((opt, i) => {
+                const isChecked = appState.answers[idx] === i ? 'checked' : '';
+                const activeClass = isChecked ? 'border-emerald-500 bg-emerald-50' : 'border-slate-200 hover:border-emerald-300';
+                
+                optionsHtml += `
+                    <label class="flex items-start gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all ${activeClass}">
+                        <input type="radio" name="q${idx}" value="${i}" ${isChecked} class="mt-1 w-5 h-5 text-emerald-600 focus:ring-emerald-500 border-gray-300 cursor-pointer" onchange="selectOption(${i})">
+                        <span class="text-sm md:text-base text-slate-700">${opt}</span>
+                    </label>
+                `;
+            });
+            el.qOptions.innerHTML = optionsHtml;
+
+            el.btnPrev.disabled = idx === 0;
+            if (idx === questionsData.length - 1) {
+                el.btnNext.classList.add('hide');
+                el.btnFinish.classList.remove('hide');
+            } else {
+                el.btnNext.classList.remove('hide');
+                el.btnFinish.classList.add('hide');
+            }
+            updateGridUI();
+        }
+
+        function selectOption(optIndex) {
+            appState.answers[appState.currentQuestion] = optIndex;
+            renderQuestion();
+        }
+
+        function nextQuestion() {
+            if (appState.currentQuestion < questionsData.length - 1) {
+                appState.currentQuestion++;
+                renderQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (appState.currentQuestion > 0) {
+                appState.currentQuestion--;
+                renderQuestion();
+            }
+        }
+
+        function jumpToQuestion(idx) {
+            appState.currentQuestion = idx;
+            renderQuestion();
+            toggleQList();
+        }
+
+        function generateGrid() {
+            let html = '';
+            for (let i = 0; i < questionsData.length; i++) {
+                html += `<button id="gridBtn${i}" onclick="jumpToQuestion(${i})" class="w-10 h-10 rounded border border-slate-300 font-medium text-sm flex items-center justify-center transition-colors text-slate-700">${i + 1}</button>`;
+            }
+            el.qGrid.innerHTML = html;
+        }
+
+        function updateGridUI() {
+            for (let i = 0; i < questionsData.length; i++) {
+                const btn = document.getElementById(`gridBtn${i}`);
+                if (!btn) continue;
+                
+                btn.className = "w-10 h-10 rounded border font-medium text-sm flex items-center justify-center transition-colors ";
+                
+                if (i === appState.currentQuestion) {
+                    btn.className += "border-2 border-blue-500 text-blue-700 bg-blue-50";
+                } else if (appState.answers[i] !== null) {
+                    btn.className += "bg-emerald-500 text-white border-emerald-600";
+                } else {
+                    btn.className += "border-slate-300 text-slate-700 hover:bg-slate-100";
+                }
+            }
+        }
+
+        function toggleQList() {
+            el.qListOverlay.classList.toggle('hide');
+        }
+
+        function startTimer() {
+            appState.timerInterval = setInterval(() => {
+                appState.timeLeft--;
+                const m = Math.floor(appState.timeLeft / 60).toString().padStart(2, '0');
+                const s = (appState.timeLeft % 60).toString().padStart(2, '0');
+                el.timer.textContent = `${m}:${s}`;
+
+                if (appState.timeLeft <= 0) {
+                    forceSubmit("Waktu habis.");
+                }
+            }, 1000);
+        }
+
+        // === SUBMISSION ===
+        function confirmSubmit() {
+            const unanswered = appState.answers.filter(a => a === null).length;
+            if (unanswered > 0) {
+                modal.show('Belum Selesai', `Terdapat ${unanswered} soal yang belum dijawab. Apakah Anda yakin ingin menyelesaikan ujian?`, 'warning',
+                    `<button onclick="modal.hide()" class="flex-1 bg-slate-200 text-slate-800 py-2 rounded-lg font-medium">Batal</button>
+                     <button onclick="processSubmit('Selesai mandiri')" class="flex-1 bg-red-600 text-white py-2 rounded-lg font-medium">Ya, Selesai</button>`
+                );
+            } else {
+                modal.show('Konfirmasi', 'Yakin ingin mengirim jawaban sekarang?', 'info',
+                    `<button onclick="modal.hide()" class="flex-1 bg-slate-200 text-slate-800 py-2 rounded-lg font-medium">Batal</button>
+                     <button onclick="processSubmit('Selesai mandiri')" class="flex-1 bg-emerald-600 text-white py-2 rounded-lg font-medium">Kirim Jawaban</button>`
+                );
+            }
+        }
+
+        function forceSubmit(reason) {
+            if (!appState.isExamActive) return;
+            processSubmit(reason);
+        }
+
+        function processSubmit(reason) {
+            appState.isExamActive = false;
+            appState.isResultScreen = true;
+            clearInterval(appState.timerInterval);
+            modal.hide();
+            
+            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+
+            let correct = 0;
+            appState.answers.forEach((ans, idx) => {
+                if (ans === questionsData[idx].answer) correct++;
+            });
+            let wrong = questionsData.length - correct;
+            let score = correct * 2;
+
+            sendDataToGoogle(correct, wrong, score, appState.violations.join('; '));
+            showResultScreen(correct, wrong, score);
+        }
+
+        function showResultScreen(correct, wrong, score) {
+            el.examScreen.classList.add('hide');
+            el.resultScreen.classList.remove('hide');
+
+            document.getElementById('resScore').textContent = score;
+            document.getElementById('resCorrect').textContent = correct;
+            document.getElementById('resWrong').textContent = wrong;
+
+            if (appState.violations.length > 0) {
+                const vAlert = document.getElementById('violationAlert');
+                const vList = document.getElementById('violationList');
+                vAlert.classList.remove('hide');
+                vList.innerHTML = '';
+                appState.violations.forEach(v => {
+                    const li = document.createElement('li');
+                    li.textContent = v;
+                    vList.appendChild(li);
+                });
+            }
+
+            const rContainer = document.getElementById('reviewContainer');
+            let reviewHtml = '';
+            
+            questionsData.forEach((q, idx) => {
+                const userAns = appState.answers[idx];
+                const isCorrect = userAns === q.answer;
+                const statusBadge = isCorrect 
+                    ? `<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs font-bold">BENAR</span>`
+                    : `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">SALAH</span>`;
+                
+                let optHtml = '';
+                q.options.forEach((opt, i) => {
+                    let style = "text-slate-600";
+                    let icon = "";
+                    if (i === q.answer) {
+                        style = "text-emerald-700 font-bold bg-emerald-50 rounded px-2 py-1";
+                        icon = " ✓ (Kunci)";
+                    } else if (i === userAns && !isCorrect) {
+                        style = "text-red-600 line-through";
+                        icon = " ✗ (Jawabanmu)";
+                    } else if (i === userAns && isCorrect) {
+                        icon = " (Jawabanmu)";
+                    }
+                    optHtml += `<div class="text-sm mt-1 ${style}">${opt}${icon}</div>`;
+                });
+
+                reviewHtml += `
+                    <div class="border-b border-slate-100 pb-4 mb-4 last:border-0 last:pb-0">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-semibold text-slate-800 text-sm">Soal ${idx + 1}</span>
+                            ${statusBadge}
+                        </div>
+                        <p class="text-sm text-slate-700 mb-2 whitespace-pre-line">${q.text}</p>
+                        <div class="mb-3 pl-2 border-l-2 border-slate-200">${optHtml}</div>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <p class="text-xs text-blue-800 font-medium">Alasan/Pembahasan:</p>
+                            <p class="text-xs text-blue-700 mt-1">${q.reason}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            rContainer.innerHTML = reviewHtml;
+        }
+
+        function resetToLogin() {
+            if (appState.timerInterval) clearInterval(appState.timerInterval);
+            
+            appState = {
+                studentName: '',
+                studentClass: '',
+                answers: new Array(50).fill(null),
+                currentQuestion: 0,
+                timeLeft: 90 * 60,
+                timerInterval: null,
+                isExamActive: false,
+                cheatCount: 0,
+                violations: [],
+                isResultScreen: false
+            };
+            
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentClass').value = '';
+            
+            el.resultScreen.classList.add('hide');
+            el.examScreen.classList.add('hide');
+            el.loginScreen.classList.remove('hide');
+            document.body.classList.remove('protected-blur');
+            
+            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+        }
+
+        function sendDataToGoogle(correct, wrong, score, violationsStr) {
+            if(!SCRIPT_URL || SCRIPT_URL.includes('REPLACE_THIS_WITH_YOUR_URL')) {
+                console.log("URL Script belum disetel. Data tidak dikirim.");
+                return;
+            }
+
+            const data = {
+                nama: appState.studentName,
+                kelas: appState.studentClass,
+                benar: correct,
+                salah: wrong,
+                nilai: score,
+                pelanggaran: violationsStr || "Tidak ada"
+            };
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(res => console.log('Data tersimpan')).catch(e => console.error('Gagal simpan:', e));
+        }
+
+        // === ANTI-CHEAT & ANTI-SCREENSHOT SYSTEM ===
+        function handleCheatAction(type) {
+            if (appState.isResultScreen) {
+                alert("Peringatan Keamanan: Terdeteksi Screenshot / Pindah Aplikasi saat melihat Hasil Ujian. Layar otomatis dikembalikan ke Halaman Login!");
+                resetToLogin();
+                return;
+            }
+
+            if (!appState.isExamActive) return;
+
+            appState.cheatCount++;
+            const timeStr = new Date().toLocaleTimeString('id-ID');
+            appState.violations.push(`[${timeStr}] Pelanggaran: ${type}`);
+
+            if (appState.cheatCount >= MAX_CHEAT) {
+                forceSubmit("Dihentikan sistem karena melanggar aturan berulang kali.");
+            } else {
+                modal.show(
+                    `Peringatan Pelanggaran (${appState.cheatCount}/${MAX_CHEAT-1})`, 
+                    `Sistem mendeteksi aktivitas mencurigakan: ${type}. Jika mencapai ${MAX_CHEAT} kali, ujian otomatis dihentikan!`, 
+                    'error',
+                    `<button onclick="modal.hide()" class="w-full bg-red-600 text-white py-2 rounded-lg font-medium">Saya Mengerti</button>`
+                );
+            }
+        }
+
+        function triggerBlurProtection() {
+            if (appState.isExamActive || appState.isResultScreen) {
+                document.body.classList.add('protected-blur');
+            }
+        }
+
+        function removeBlurProtection() {
+            document.body.classList.remove('protected-blur');
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                triggerBlurProtection();
+                handleCheatAction("Meninggalkan Halaman Ujian/Screenshot (Tab/Minimize)");
+            } else {
+                setTimeout(removeBlurProtection, 500);
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            triggerBlurProtection();
+            handleCheatAction("Kehilangan Fokus Jendela (Indikasi Buka Aplikasi/Screenshot)");
+            setTimeout(removeBlurProtection, 500);
+        });
+
+        window.addEventListener('focus', () => {
+            removeBlurProtection();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (
+                e.key === 'PrintScreen' || e.keyCode === 44 ||
+                (e.metaKey && e.shiftKey) ||
+                ((e.key === 's' || e.key === 'S') && (e.metaKey || (e.ctrlKey && e.shiftKey))) ||
+                e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 'p' || e.key === 'P' || e.key === 's' || e.key === 'S' || e.key === 'c' || e.key === 'C'))
+            ) {
+                e.preventDefault();
+                triggerBlurProtection();
+                navigator.clipboard.writeText("AKSES DIBLOKIR: DILARANG MENCREENSHOT/MENYIMPAN").catch(() => {});
+                handleCheatAction("Percobaan Screenshot / Pintasan Dilarang");
+                setTimeout(removeBlurProtection, 800);
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'PrintScreen' || e.keyCode === 44) {
+                triggerBlurProtection();
+                navigator.clipboard.writeText("AKSES DIBLOKIR").catch(() => {});
+                handleCheatAction("Percobaan Screenshot (PrintScreen)");
+                setTimeout(removeBlurProtection, 800);
+            }
+        });
+
+        document.addEventListener('copy', (e) => {
+            e.preventDefault();
+            handleCheatAction("Mencoba Copy Teks");
+        });
+
+        document.addEventListener('dragstart', (e) => {
+            e.preventDefault();
+        });
+
+    </script>
+</body>
+</html>
